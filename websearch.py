@@ -28,6 +28,7 @@ MAX_RESULTS = 5
 MAX_TOOL_ROUNDS = 5  # safety cap so a tool loop can't run forever
 FETCH_MAX_CHARS = 6000  # cap page text so one page can't blow out the context
 FETCH_TIMEOUT = 15  # seconds
+SHOW_THINKING = os.environ.get("SHOW_THINKING", "1") != "0"  # print model reasoning
 
 client = OpenAI(base_url=BASE_URL, api_key="sk-no-key-needed")
 
@@ -143,6 +144,13 @@ def run_turn(messages: list) -> str:
         )
         msg = resp.choices[0].message
         messages.append(msg)
+
+        # llama-server (reasoning-format auto) returns the model's thinking in a
+        # separate reasoning_content field — print it dimmed if present.
+        if SHOW_THINKING:
+            reasoning = getattr(msg, "reasoning_content", None)
+            if reasoning:
+                print(f"\033[2m[thinking] {reasoning.strip()}\033[0m\n")
 
         if not msg.tool_calls:
             return msg.content or ""

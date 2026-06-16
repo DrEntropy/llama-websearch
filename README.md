@@ -30,6 +30,11 @@ you'll see a yellow `[searching: ...]` line when the model decides to search.
 |-------------------|------------------------------|------------------------------------|
 | `LLAMA_BASE_URL`  | `http://localhost:8080/v1`   | point at a different server/port   |
 | `LLAMA_MODEL`     | `qwen3`                      | ignored by llama-server (cosmetic) |
+| `SHOW_THINKING`   | `1`                          | set to `0` to hide model reasoning |
+
+The model's reasoning (Qwen3's `<think>` content) prints dimmed as `[thinking] ...`.
+It comes from llama-server's `message.reasoning_content` field (enabled by the
+default `--reasoning-format auto`).
 
 ## Tools the model can call
 
